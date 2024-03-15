@@ -191,6 +191,17 @@ static const uint8_t PROGMEM
       0x00, 0x00,                   //     XSTART = 0
       0x00, 0x9F },                 //     XEND = 159
 
+  Rcmd2green320x240plugin[] = {      // 7735R init, part 2 (mini 320x240 with plugin FPC)
+    3,                              //  3 commands in list:
+    ST77XX_INVON,  0,              //   1: Display is inverted
+    ST77XX_CASET,   4,              //  2: Column addr set, 4 args, no delay:
+      0x00, 0x00,                   //     XSTART = 0
+      0x00, 239,                   //     XEND = 239
+    ST77XX_RASET,   4,              //  3: Row addr set, 4 args, no delay:
+      0x00, 0x00,                   //     XSTART = 0
+      319/256,319%256 },             //     XEND = 319
+
+
   Rcmd3[] = {                       // 7735R init, part 3 (red or green tab)
     4,                              //  4 commands in list:
     ST7735_GMCTRP1, 16      ,       //  1: Gamma Adjustments (pos. polarity), 16 args + delay:
@@ -248,6 +259,14 @@ void Adafruit_ST7735::initR(uint8_t options) {
     _height = ST7735_TFTWIDTH_80;
     _width = ST7735_TFTHEIGHT_160;
     displayInit(Rcmd2green160x80plugin);
+    _colstart = 26;
+    _rowstart = 1;
+    invertOnCommand = ST77XX_INVOFF;
+    invertOffCommand = ST77XX_INVON;
+  } else if (options == INITR_24) {
+    _height = 240;
+    _width = 320;
+    displayInit(Rcmd2green320x240plugin);
     _colstart = 26;
     _rowstart = 1;
     invertOnCommand = ST77XX_INVOFF;
